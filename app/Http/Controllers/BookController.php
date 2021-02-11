@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Author;
-use Ramsey\Uuid\Uuid;
 
 use App\Http\Requests\BookRequest;
+
+use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
@@ -22,7 +24,7 @@ class BookController extends Controller
     {
         $books = Book::paginate(10);
         
-        return response()->json(["message" => "success", "result" => $books], 200);
+        return BookResource::collection($books);
     }
 
     /**
@@ -92,6 +94,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        
+        return response()->json(["message" => "Hapus buku berhasil"], 200);
     }
 }

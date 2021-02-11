@@ -13,6 +13,10 @@ class Book extends Model
         'author_id'
     ];
 
+    protected $casts = [
+        'id' => 'string'
+      ];
+
     public function author()
     {
         return $this->belongsTo(Author::class);
