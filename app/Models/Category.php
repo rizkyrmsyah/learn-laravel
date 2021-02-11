@@ -13,4 +13,9 @@ class Category extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function checkCategory($categoryId)
+    {
+        return $this->where('id', $categoryId)->first();
+    }
 }

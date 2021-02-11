@@ -22,11 +22,7 @@ class BookController extends Controller
     {
         $books = Book::paginate(10);
         
-        return response()->json([
-            "code" => 200,
-            "message" => "success",
-            "result" => $books
-        ]);
+        return response()->json(["message" => "success", "result" => $books], 200);
     }
 
     /**
@@ -35,24 +31,18 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(BookRequest $request, Category $category)
+    public function store(BookRequest $request, Category $category, Author $author)
     {
         $validated = $request->validated();
         
-        $categoryCheck = Category::where('id', $request->category_id)->first();
+        $categoryCheck = $category->checkCategory($request->category_id);
         if(!$categoryCheck){
-            return response()->json([
-                "code" => 404,
-                "message" => "Kategori tidak ditemukan"
-            ],404);
+            return response()->json(["message" => "Kategori tidak ditemukan"], 422);
         }
         
-        $authorCheck = Author::where('id', $request->author_id)->first();
+        $authorCheck = $author->checkAuthor($request->author_id);
         if(!$authorCheck){
-            return response()->json([
-                "code" => 404,
-                "message" => "Penulis tidak ditemukan"
-            ],404);
+            return response()->json(["message" => "Penulis tidak ditemukan"], 422);
         }
 
         $checkIfExisting = Book::where('category_id',$request->category_id)
@@ -61,20 +51,14 @@ class BookController extends Controller
             ->first();
         
         if($checkIfExisting){
-            return response()->json([
-                "code" => 422,
-                "message" => "Buku sudah ada"
-            ],422);
+            return response()->json(["message" => "Buku sudah ada"], 422);
         }
 
         Book::insert($request->all()+[
             "id" => Uuid::uuid4()
         ]);
 
-        return response()->json([
-            "code" => 200,
-            "message" => "Tambah buku berhasil"
-        ]);
+        return response()->json(["message" => "Tambah buku berhasil"], 200);
     }
 
     /**

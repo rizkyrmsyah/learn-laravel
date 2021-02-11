@@ -13,4 +13,9 @@ class Author extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function checkAuthor($authorId)
+    {
+        return $this->where('id', $authorId)->first();
+    }
 }
