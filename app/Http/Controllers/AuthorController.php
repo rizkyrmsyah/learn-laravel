@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use Illuminate\Http\Request;
 
+use App\Http\Resources\AuthorResource;
+
 class AuthorController extends Controller
 {
     /**
@@ -14,7 +16,9 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        $authors = Author::paginate(10);
+        
+        return AuthorResource::collection($authors);
     }
 
     /**
@@ -25,7 +29,13 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required'
+        ]);
+
+        Author::create($request->all());
+
+        return response()->json(["message" => "Tambah penulis berhasil"], 200);
     }
 
     /**
@@ -48,7 +58,13 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required'
+        ]);
+
+        $author->update($request->all());
+
+        return response()->json(["message" => "Ubah buku berhasil"], 200);
     }
 
     /**
@@ -59,6 +75,8 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        $author->delete();
+        
+        return response()->json(["message" => "Hapus penulis berhasil"], 200);
     }
 }

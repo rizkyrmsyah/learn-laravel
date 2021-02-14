@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
 
 use App\Models\Book;
 use App\Models\Category;
@@ -56,9 +55,7 @@ class BookController extends Controller
             return response()->json(["message" => "Buku sudah ada"], 422);
         }
 
-        Book::insert($request->all()+[
-            "id" => Uuid::uuid4()
-        ]);
+        Book::create($request->all());
 
         return response()->json(["message" => "Tambah buku berhasil"], 200);
     }
@@ -71,7 +68,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return new BookResource($book);
     }
 
     /**
@@ -81,9 +78,28 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book, Category $category, Author $author)
     {
-        //
+        $validated = $request->validated();  
+
+        $categoryCheck = $category->checkCategory($request->category_id);
+        if(!$categoryCheck){
+            return response()->json(["message" => "Kategori tidak ditemukan"], 422);
+        }
+        
+        $authorCheck = $author->checkAuthor($request->author_id);
+        if(!$authorCheck){
+            return response()->json(["message" => "Penulis tidak ditemukan"], 422);
+        }
+
+        $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
+        if($checkIfExisting){
+            return response()->json(["message" => "Buku sudah ada"], 422);
+        }
+
+        $book->update($request->all());
+
+        return response()->json(["message" => "Ubah buku berhasil"], 200);
     }
 
     /**

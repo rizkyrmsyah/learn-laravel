@@ -3,7 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,4 +26,6 @@ Route::get('/health', function(){
     return response()->json(["message" => "hello world"]);
 });
 
+Route::apiResource('authors', AuthorController::class);
 Route::apiResource('books', BookController::class);
+Route::apiResource('categories', CategoryController::class);
