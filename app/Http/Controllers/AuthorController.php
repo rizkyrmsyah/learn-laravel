@@ -46,7 +46,7 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        //
+        return new AuthorResource($author);
     }
 
     /**
@@ -64,7 +64,7 @@ class AuthorController extends Controller
 
         $author->update($request->all());
 
-        return response()->json(["message" => "Ubah buku berhasil"], 200);
+        return response()->json(["message" => "Ubah penulis berhasil"], 200);
     }
 
     /**
