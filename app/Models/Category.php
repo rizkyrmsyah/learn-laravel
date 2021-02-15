@@ -9,10 +9,8 @@ use Str;
 class Category extends Model
 {
     use HasFactory;
-    
-    protected $casts = [
-        'id' => 'string'
-    ];
+
+    public $incrementing = false;
 
     protected $fillable = [
         'name'

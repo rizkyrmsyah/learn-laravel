@@ -6,6 +6,7 @@ use App\Models\Author;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\AuthorResource;
+use Illuminate\Http\Response;
 
 class AuthorController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthorController extends Controller
     public function index()
     {
         $authors = Author::paginate(10);
-        
+
         return AuthorResource::collection($authors);
     }
 
@@ -35,7 +36,7 @@ class AuthorController extends Controller
 
         Author::create($request->all());
 
-        return response()->json(["message" => "Tambah penulis berhasil"], 200);
+        return response()->json(["message" => "Tambah penulis berhasil"], Response::HTTP_CREATED);
     }
 
     /**
@@ -64,7 +65,7 @@ class AuthorController extends Controller
 
         $author->update($request->all());
 
-        return response()->json(["message" => "Ubah penulis berhasil"], 200);
+        return response()->json(["message" => "Ubah penulis berhasil"], Response::HTTP_OK);
     }
 
     /**
@@ -76,7 +77,7 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         $author->delete();
-        
-        return response()->json(["message" => "Hapus penulis berhasil"], 200);
+
+        return response()->json(["message" => "Hapus penulis berhasil"], Response::HTTP_NO_CONTENT);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Resources\CategoryResource;
 
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::paginate(10);
-        
+
         return CategoryResource::collection($categories);
     }
 
@@ -35,12 +36,12 @@ class CategoryController extends Controller
 
         $categoryCheck = $category->isExist($request->name);
         if($categoryCheck){
-            return response()->json(["message" => "Kategori sudah ada"], 422);
+            return response()->json(["message" => "Kategori sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         Category::create($request->all());
 
-        return response()->json(["message" => "Tambah kategori berhasil"], 200);
+        return response()->json(["message" => "Tambah kategori berhasil"], Response::HTTP_CREATED);
     }
 
     /**
@@ -69,7 +70,7 @@ class CategoryController extends Controller
 
         $category->update($request->all());
 
-        return response()->json(["message" => "Ubah kategori berhasil"], 200);
+        return response()->json(["message" => "Ubah kategori berhasil"], Response::HTTP_OK);
     }
 
     /**
@@ -81,7 +82,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        
-        return response()->json(["message" => "Hapus kategori berhasil"], 200);
+
+        return response()->json(["message" => "Hapus kategori berhasil"], Response::HTTP_NO_CONTENT);
     }
 }

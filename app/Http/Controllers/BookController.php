@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Models\Book;
 use App\Models\Category;
@@ -22,7 +23,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::paginate(10);
-        
+
         return BookResource::collection($books);
     }
 
@@ -35,29 +36,29 @@ class BookController extends Controller
     public function store(BookRequest $request, Category $category, Author $author)
     {
         $validated = $request->validated();
-        
+
         $categoryCheck = $category->checkCategory($request->category_id);
         if(!$categoryCheck){
-            return response()->json(["message" => "Kategori tidak ditemukan"], 422);
+            return response()->json(["message" => "Kategori tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        
+
         $authorCheck = $author->checkAuthor($request->author_id);
         if(!$authorCheck){
-            return response()->json(["message" => "Penulis tidak ditemukan"], 422);
+            return response()->json(["message" => "Penulis tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $checkIfExisting = Book::where('category_id',$request->category_id)
             ->where('author_id',$request->author_id)
             ->where('title', $request->title)
             ->first();
-        
+
         if($checkIfExisting){
-            return response()->json(["message" => "Buku sudah ada"], 422);
+            return response()->json(["message" => "Buku sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        Book::create($request->all());
+        Book::create($request->validated());
 
-        return response()->json(["message" => "Tambah buku berhasil"], 200);
+        return response()->json(["message" => "Tambah buku berhasil"], Response::HTTP_CREATED);
     }
 
     /**
@@ -80,26 +81,26 @@ class BookController extends Controller
      */
     public function update(BookRequest $request, Book $book, Category $category, Author $author)
     {
-        $validated = $request->validated();  
+        $validated = $request->validated();
 
         $categoryCheck = $category->checkCategory($request->category_id);
         if(!$categoryCheck){
-            return response()->json(["message" => "Kategori tidak ditemukan"], 422);
+            return response()->json(["message" => "Kategori tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        
+
         $authorCheck = $author->checkAuthor($request->author_id);
         if(!$authorCheck){
-            return response()->json(["message" => "Penulis tidak ditemukan"], 422);
+            return response()->json(["message" => "Penulis tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
         if($checkIfExisting){
-            return response()->json(["message" => "Buku sudah ada"], 422);
+            return response()->json(["message" => "Buku sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $book->update($request->all());
 
-        return response()->json(["message" => "Ubah buku berhasil"], 200);
+        return response()->json(["message" => "Ubah buku berhasil"], Response::HTTP_OK);
     }
 
     /**
@@ -111,7 +112,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $book->delete();
-        
-        return response()->json(["message" => "Hapus buku berhasil"], 200);
+
+        return response()->json(["message" => "Hapus buku berhasil"], Response::HTTP_NO_CONTENT);
     }
 }

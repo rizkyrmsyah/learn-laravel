@@ -10,16 +10,14 @@ class Book extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $fillable = [
         'author_id',
         'category_id',
         'title',
         'description',
         'status'
-    ];
-
-    protected $casts = [
-        'id' => 'string'
     ];
 
     public function author()
