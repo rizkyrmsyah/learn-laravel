@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\CategoryBook;
 
-class CategoryResource extends JsonResource
+class CategoryBook extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +16,11 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'books' => CategoryBook::collection($this->books)
+            'title' => $this->title,
+            'description' => $this->description,
+            'author_id' => $this->author_id,
+            'author' => $this->author->name,
+            'status' => $this->status,
         ];
     }
 }
