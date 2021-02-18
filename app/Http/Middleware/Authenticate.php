@@ -16,7 +16,8 @@ class Authenticate extends Middleware
     public function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            abort(response()->json(["message"=> "silahkan login terlebih dahulu"], Response::HTTP_UNAUTHORIZED));
+            return route('login');
+            // abort(response()->json(["message"=> "silahkan login terlebih dahulu"], Response::HTTP_UNAUTHORIZED));
         }
     }
 }
