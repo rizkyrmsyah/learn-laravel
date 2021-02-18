@@ -30,7 +30,36 @@ class BookController extends Controller
     public function index_test()
     {
         $books = Book::paginate(10);
-
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
+        return BookResource::collection($books);
         return BookResource::collection($books);
     }
 
