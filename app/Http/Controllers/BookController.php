@@ -27,6 +27,14 @@ class BookController extends Controller
         return BookResource::collection($books);
     }
 
+    public function index_test()
+    {
+        $books = Book::paginate(10);
+
+        return BookResource::collection($books);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
