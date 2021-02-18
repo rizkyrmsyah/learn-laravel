@@ -27,7 +27,8 @@ class SessionController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+        // $request->user()->tokens()->where('tokenable_id', auth()->user()->id)->delete();
 
-        return response()->json(["message", "logout berhasil"], Response::HTTP_OK);
+        return response()->json(["message" => "logout berhasil"], Response::HTTP_OK);
     }
 }
