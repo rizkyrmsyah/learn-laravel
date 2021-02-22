@@ -7,14 +7,13 @@ use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Requests\AuthRequest;
+
 class SessionController extends Controller
 {
-    public function auth(Request $request)
+    public function auth(AuthRequest $request)
     {
-        $data = $request->validate([
-            'email'	=> 'required',
-            'password' => 'required'
-        ]);
+        $request->validated();
 
         $user = User::where('email', $request->email)->first();
         if(!$user || !Hash::check($request->password, $user->password)){

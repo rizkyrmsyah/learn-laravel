@@ -29,8 +29,10 @@ Route::get('/health', function(){
 
 Route::post('login', [SessionController::class, 'auth']);
 
-Route::group(['middleware' => 'auth:sanctum'], function(){
-    Route::Post('logout', [SessionController::class, 'logout']);
+// Route::group(['middleware' => ['auth:sanctum', 'is_authorized']], function(){
+Route::group(['middleware' => ['auth:sanctum']], function(){
+
+    Route::post('logout', [SessionController::class, 'logout']);
 
     Route::apiResource('authors', AuthorController::class);
     Route::apiResource('books', BookController::class);

@@ -37,16 +37,6 @@ class BookController extends Controller
     {
         $validated = $request->validated();
 
-        $categoryCheck = $category->checkCategory($request->category_id);
-        if(!$categoryCheck){
-            return response()->json(["message" => "Kategori tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $authorCheck = $author->checkAuthor($request->author_id);
-        if(!$authorCheck){
-            return response()->json(["message" => "Penulis tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $checkIfExisting = Book::where('category_id',$request->category_id)
             ->where('author_id',$request->author_id)
             ->where('title', $request->title)
@@ -56,7 +46,11 @@ class BookController extends Controller
             return response()->json(["message" => "Buku sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        Book::create($request->validated());
+        $book = new Book;
+        $book->author_id = $request->author_id;
+        $book->category_id = $request->category_id;
+        $book->fill($validated);
+        $book->save();
 
         return response()->json(["message" => "Tambah buku berhasil"], Response::HTTP_CREATED);
     }
@@ -83,22 +77,12 @@ class BookController extends Controller
     {
         $validated = $request->validated();
 
-        $categoryCheck = $category->checkCategory($request->category_id);
-        if(!$categoryCheck){
-            return response()->json(["message" => "Kategori tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $authorCheck = $author->checkAuthor($request->author_id);
-        if(!$authorCheck){
-            return response()->json(["message" => "Penulis tidak ditemukan"], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
         if($checkIfExisting){
             return response()->json(["message" => "Buku sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $book->update($request->all());
+        $book->update($request->validated());
 
         return response()->json(["message" => "Ubah buku berhasil"], Response::HTTP_OK);
     }

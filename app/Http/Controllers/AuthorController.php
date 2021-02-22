@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use Illuminate\Http\Request;
-
-use App\Http\Resources\AuthorResource;
 use Illuminate\Http\Response;
+
+use App\Http\Requests\AuthorRequest;
+use App\Http\Resources\AuthorResource;
 
 class AuthorController extends Controller
 {
@@ -28,13 +29,11 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorRequest $request)
     {
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
+        $validated = $request->validated();
 
-        Author::create($request->all());
+        Author::create($validated);
 
         return response()->json(["message" => "Tambah penulis berhasil"], Response::HTTP_CREATED);
     }
@@ -57,13 +56,11 @@ class AuthorController extends Controller
      * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(AuthorRequest $request, Author $author)
     {
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
+        $validated = $request->validated();
 
-        $author->update($request->all());
+        $author->update($validated);
 
         return response()->json(["message" => "Ubah penulis berhasil"], Response::HTTP_OK);
     }

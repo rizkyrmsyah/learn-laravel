@@ -13,8 +13,6 @@ class Book extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'author_id',
-        'category_id',
         'title',
         'description',
         'status'

@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
@@ -28,18 +29,16 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Category $category)
+    public function store(CategoryRequest $request, Category $category)
     {
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
+        $validated = $request->validated();
 
         $categoryCheck = $category->isExist($request->name);
         if($categoryCheck){
             return response()->json(["message" => "Kategori sudah ada"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        Category::create($request->all());
+        Category::create($validated);
 
         return response()->json(["message" => "Tambah kategori berhasil"], Response::HTTP_CREATED);
     }
@@ -62,13 +61,11 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
+        $validated = $request->validated();
 
-        $category->update($request->all());
+        $category->update($validated);
 
         return response()->json(["message" => "Ubah kategori berhasil"], Response::HTTP_OK);
     }
